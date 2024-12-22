@@ -15,5 +15,14 @@ Our work builds a comprehensive electricvehicle(EV) data platform, with which th
   - datetime
 
 
+## Run our EV platform webapp
 
+```bash
+$ cd 'web UI'
+```
+
+```bash
+$ python3 app.py
+```
+(Required to modify the OpenAi api key to your own key in the code in advance.)
 
