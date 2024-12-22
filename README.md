@@ -4,7 +4,9 @@ Our work builds a comprehensive electricvehicle(EV) data platform, with which th
  ## Required packages
 
   - langchain
-  - langchain community
+  - langchain_community
+  - langchain-openai
+  - openai
   - pypdf
   - faiss-cpu(or faiss-gpu)
   - flask
