@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Click on the map to predict the trend of Charing stations here </title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 80%;
+        }
+
+            button {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:active {
+            background-color: #003d7a;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>EV charging station </h1>
+
+    <p>
+    <h2>Number of newly-opened stations by year</h2>
+    <div>
+    <img img src="{{ url_for('static', filename='images/numsofstations.png') }}"  width="400" height="300"  style="display: inline-block;">
+    </div>
+<p></p>
+
+    <h2>Click on the map to predict the trend of Charing stations here.(Apply to US region)</h2>
+    <div id="map"></div>
+    <p id="coordinates"></p>
+    <p id="prediction"></p>
+
+    <button onclick="navigateToChat()">Go to Chatbot</button>
+    <button onclick="navigateToPrice()">Predict EV Pricing</button>
+    <button  onclick="Backtomain()">Back to Mainpage</button>
+    <script>
+        function navigateToChat() {
+            window.location.href = "/chat";
+        }
+                function navigateToPrice() {
+            window.location.href = "/price";
+        }
+        function Backtomain() {
+            window.location.href = "/";
+        }
+
+
+    </script>
+
+    <script>
+        // 初始化地图
+        var map = L.map('map').setView([37.8, -96], 4); // 默认显示美国
+
+        // 加载地图图层
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+         fetch('/charge/get_points')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(point => {
+                    var marker = L.marker([point.latitude, point.longitude]).addTo(map);
+                    marker.bindPopup(`<b>${point.info}</b><br>纬度: ${point.latitude}<br>经度: ${point.longitude}`);
+                });
+            })
+            .catch(error => console.error('获取点数据失败:', error));
+
+
+        var currentMarker = null; // 用于存储当前的标记
+        // 点击事件
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+            document.getElementById('coordinates').innerText = `Latitude: ${lat}, Longtitude: ${lng}`;
+
+
+
+            // 如果存在之前的标记，移除它
+    if (currentMarker) {
+        map.removeLayer(currentMarker);
+    }
+
+    // 添加新的标记到地图
+    currentMarker = L.marker([lat, lng]).addTo(map);
+    currentMarker.bindPopup(`<br>Latitude: ${lat}<br>Longitude: ${lng}`).openPopup();
+
+
+
+
+            // 发送坐标到后端
+            fetch('/charge/get_coordinates', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ latitude: lat, longitude: lng }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('prediction').innerText = `Error: ${data.error}`;
+                } else {
+                    document.getElementById('prediction').innerText = `Prediction result: ${data.prediction}`;
+                }
+            })
+            .catch(error => console.error('错误:', error));
+        });
+    </script>
+</body>
+</html>
