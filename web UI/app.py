@@ -148,11 +148,11 @@ def get_points():
 @app.route("/chat", methods=["GET", "POST"])
 def chat():
     if request.method == "POST":
-        user_input = request.json.get("message")  # 获取用户的消息
+        user_input = request.json.get("message")  # Get user input
         print(user_input)
         response = qa_chain({"question":user_input})["answer"]
-        return jsonify({"response": response})  # 返回 JSON 响应
-    return render_template("chat.html")  # 渲染前端页面
+        return jsonify({"response": response})  # Return json response
+    return render_template("chat.html")
 
 
 if __name__ == '__main__':

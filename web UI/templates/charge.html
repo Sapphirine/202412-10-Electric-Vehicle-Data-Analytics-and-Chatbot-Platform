@@ -64,10 +64,8 @@
     </script>
 
     <script>
-        // 初始化地图
-        var map = L.map('map').setView([37.8, -96], 4); // 默认显示美国
 
-        // 加载地图图层
+        var map = L.map('map').setView([37.8, -96], 4);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -78,14 +76,14 @@
             .then(data => {
                 data.forEach(point => {
                     var marker = L.marker([point.latitude, point.longitude]).addTo(map);
-                    marker.bindPopup(`<b>${point.info}</b><br>纬度: ${point.latitude}<br>经度: ${point.longitude}`);
+                    marker.bindPopup(`<b>${point.info}</b><br>latitude: ${point.latitude}<br>longitude: ${point.longitude}`);
                 });
             })
-            .catch(error => console.error('获取点数据失败:', error));
+            .catch(error => console.error('Error getting location:', error));
 
 
-        var currentMarker = null; // 用于存储当前的标记
-        // 点击事件
+        var currentMarker = null;
+
         map.on('click', function(e) {
             var lat = e.latlng.lat;
             var lng = e.latlng.lng;
@@ -93,19 +91,19 @@
 
 
 
-            // 如果存在之前的标记，移除它
+
     if (currentMarker) {
         map.removeLayer(currentMarker);
     }
 
-    // 添加新的标记到地图
+
     currentMarker = L.marker([lat, lng]).addTo(map);
     currentMarker.bindPopup(`<br>Latitude: ${lat}<br>Longitude: ${lng}`).openPopup();
 
 
 
 
-            // 发送坐标到后端
+            // Send location to backend
             fetch('/charge/get_coordinates', {
                 method: 'POST',
                 headers: {
@@ -121,7 +119,7 @@
                     document.getElementById('prediction').innerText = `Prediction result: ${data.prediction}`;
                 }
             })
-            .catch(error => console.error('错误:', error));
+            .catch(error => console.error('Error:', error));
         });
     </script>
 </body>
