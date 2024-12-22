@@ -29,7 +29,7 @@ from charging_station_predictor import ChargingStationPredictor
 import pandas as pd
 from joblib import load
 
-# 设置 API 密钥
+
 os.environ["OPENAI_API_KEY"] = ("Your-Api-Key")
 
 llm = ChatOpenAI(
