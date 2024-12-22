@@ -24,5 +24,6 @@ $ cd 'web UI'
 ```bash
 $ python3 app.py
 ```
-(Required to modify the OpenAi api key to your own key in the code in advance.)
+Then visit http://127.0.0.1:5000
+(Required to modify the OpenAi api key to your own key in app.py in advance.)
 
