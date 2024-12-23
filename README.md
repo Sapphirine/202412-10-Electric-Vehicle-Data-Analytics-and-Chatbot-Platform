@@ -28,4 +28,5 @@ $ python3 app.py
 ```
 Then visit http://127.0.0.1:5000
 (Required to modify the OpenAi api key to your own key in app.py in advance.)
-
+## Video Link
+https://youtu.be/j6TKQ36n_M8
